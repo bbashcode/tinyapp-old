@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/bbashcode/tinyapp/issues"
   },
-  "homepage": "https://github.com/bbashcode/tinyapp#readme"
+  "homepage": "https://github.com/bbashcode/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
 }
