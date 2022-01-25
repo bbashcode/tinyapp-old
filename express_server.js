@@ -39,7 +39,12 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-
+app.get("/u/:shortURL", (req, res) => {
+  // const longURL = ...
+  const {longURL} = req.body;
+  res.redirect(200,"/urls/:shortURL");
+  res.render("urls_index", templateVars);  
+});
 
 app.post("/urls", (req, res) => {
   const {longURL} = req.body;
