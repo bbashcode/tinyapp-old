@@ -15,7 +15,8 @@ let urlDatabase = {
 };
 
 app.get("/", (req, res) =>{
-  res.send("Hello");
+  res.send("Welcome to the TinyApp Universe!");
+
 });
 
 //setting up GET route to render the urls_new.ejs template
