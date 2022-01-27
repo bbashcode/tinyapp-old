@@ -2,9 +2,12 @@ const express = require("express");
 const app = express();
 const PORT = 8080; //default port
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
+
 
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -17,7 +20,10 @@ app.get("/", (req, res) =>{
 
 //setting up GET route to render the urls_new.ejs template
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const templateVars = {
+    username: req.cookies["username"],
+  };
+  res.render("urls_new", templateVars);
 })
 
 app.get("/urls.json", (req, res) => {
@@ -25,11 +31,11 @@ app.get("/urls.json", (req, res) => {
 });
 
 
-//adding a new route for /urls
-app.get("/urls", (req, res) => {
-  const templateVars = {urls: urlDatabase};
-  res.render("urls_index", templateVars);
-});
+// //adding a new route for /urls
+// app.get("/urls", (req, res) => {
+//   const templateVars = {urls: urlDatabase};
+//   res.render("urls_index", templateVars);
+// });
 
 
 
@@ -48,23 +54,62 @@ app.get("/u/:shortURL", (req, res) => {
   }); 
 });
 
-app.post("/urls", (req, res) => {
+app.get("/urls", (req, res) => {
+  // const {longURL} = req.body;
+  // const shortURL = generateRandomString();
+  // const urlObject = {[shortURL]: longURL};
+  
+  // urlDatabase = {...urlDatabase, [shortURL]: longURL};
+  
+  const templateVars = {
+    username: req.cookies["username"],
+    urls: urlDatabase
+  };
+  console.log(`Template Variable: `,templateVars);
+  res.render("urls_index", templateVars);
+});
+
+app.post("/create-urls", (req, res) => {
   const {longURL} = req.body;
   const shortURL = generateRandomString();
   const urlObject = {[shortURL]: longURL};
   // console.log("longURL : ",longURL,"shortURL: ", shortURL, "url Object", urlObject);  // Log the POST request body to the console
   urlDatabase = {...urlDatabase, [shortURL]: longURL};
-  console.log(urlDatabase);
-  const templateVars = {urls: urlDatabase};
-  res.render("urls_index", templateVars);        // Respond with 'Ok' (we will replace this)
+  // console.log(urlDatabase);
+  const templateVars = {
+    username: req.cookies["username"],
+    urls: urlDatabase
+  };
+  console.log(`Template Variable: `,templateVars);
+  res.render("urls_index", templateVars);
 });
 
+// Login handling route
+app.post("/login", (req, res) => {
+ const email = req.body.email;
+ const password = req.body.password;
+ const username = req.body.username;
+ 
+ if(username){
+   res.cookie("username", username);
+   res.redirect("/urls");
+ }
+})
 
+// Logout handling route
+app.post("/logout", (req, res) => {
+  res.clearCookie('username');
+  res.redirect("/urls")
+ })
+
+// for delete button
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 })
 
+
+//for edit button
 app.get("/urls/:shortURL/edit", (req, res) => {
   const shortURL = req.params.shortURL;
   urlDatabase[shortURL] = req.params.updatedURL;
