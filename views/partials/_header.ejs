@@ -1,6 +1,16 @@
 <style>
   .parent-container {
-   margin-left: 72rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-left: 72rem;
+  }
+  .logged-in {
+    color: black;
+  }
+
+  .child1{
+    margin: auto;
   }
 </style>
 <header>
@@ -15,11 +25,11 @@
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
           <div class="parent-container">
             <% if(username){ %>
-              <p>Welcome to TinyApp! <%=username%> </p>
-              <form method="POST" action="/logout">
-                  <p>Username: <%=username%> </p>
-                 <button type="submit" class="btn btn-outline-dark">Logout</button>
-              </form>
+              <div class="child1"> <p class="logged-in">Logged in as: <%=username%> </p></div>
+             <div class="child2"><form method="POST" action="/logout">
+              <button type="submit" class="btn btn-outline-dark">Logout</button>
+           </form></div>
+              
               <% } else { %>
                 <form method="POST" action="/login">
                   <input type="text" placeholder="Username" name="username"></input>
