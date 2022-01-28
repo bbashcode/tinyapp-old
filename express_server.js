@@ -1,19 +1,23 @@
+//all the imports
 const express = require("express");
 const app = express();
 const PORT = 8080; //default port
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
+//setting up the packages to be used in the server file.
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
 
+//hardcoded database for now
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
+//homepage route
 app.get("/", (req, res) =>{
   res.send("Welcome to the TinyApp Universe!");
 
@@ -32,14 +36,6 @@ app.get("/urls.json", (req, res) => {
 });
 
 
-// //adding a new route for /urls
-// app.get("/urls", (req, res) => {
-//   const templateVars = {urls: urlDatabase};
-//   res.render("urls_index", templateVars);
-// });
-
-
-
 //setting up another route and adding template
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
@@ -47,7 +43,6 @@ app.get("/urls/:shortURL", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  // const longURL = ...
   app.get('/u/:shortURL', (req, res) => {
     const shortURL = req.params.shortURL;
     const longURL = urlDatabase[shortURL];
@@ -56,12 +51,7 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  // const {longURL} = req.body;
-  // const shortURL = generateRandomString();
-  // const urlObject = {[shortURL]: longURL};
-  
-  // urlDatabase = {...urlDatabase, [shortURL]: longURL};
-  
+
   const templateVars = {
     username: req.cookies["username"],
     urls: urlDatabase
@@ -70,13 +60,13 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+//route for creating new urls
 app.post("/create-urls", (req, res) => {
   const {longURL} = req.body;
   const shortURL = generateRandomString();
   const urlObject = {[shortURL]: longURL};
-  // console.log("longURL : ",longURL,"shortURL: ", shortURL, "url Object", urlObject);  // Log the POST request body to the console
   urlDatabase = {...urlDatabase, [shortURL]: longURL};
-  // console.log(urlDatabase);
+
   const templateVars = {
     username: req.cookies["username"],
     urls: urlDatabase
@@ -129,6 +119,8 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
+
+//function to generate 6 character long unique renadom string
 function generateRandomString() {
   let length = 6;
   let shortURL = "";
