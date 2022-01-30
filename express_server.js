@@ -11,6 +11,20 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
 
+//users is a global object which is used to store and access the users in the app
+let users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
+
 //hardcoded database for now
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -116,8 +130,29 @@ app.post('/urls/:shortURL/update', (req, res) => {
 
 //for registration template
 app.get("/register", (req, res) => {
-  res.render("/register");
+  const templateVars = {
+    username: req.cookies["username"],
+    email: "james@bond.com"
+  };
+  res.render("register.ejs", templateVars);
 })
+
+// registration endpoint for handling registration data
+app.post("/register", (req, res) => {
+  let newUser ={
+    userID: generateRandomString(),
+    email: req.body.email,
+    password: req.body.password
+  }
+
+  const templateVars = {
+    ...users, newUser
+  };
+  
+  res.cookie("user_id", newUser.userID);
+  res.redirect("/urls");
+})
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
