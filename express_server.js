@@ -40,7 +40,7 @@ app.get("/", (req, res) =>{
 //setting up GET route to render the urls_new.ejs template
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    username: req.cookies["username"],
+    ...users
   };
   res.render("urls_new", templateVars);
 })
@@ -67,7 +67,7 @@ app.get("/u/:shortURL", (req, res) => {
 app.get("/urls", (req, res) => {
 
   const templateVars = {
-    username: req.cookies["username"],
+    ...users,
     urls: urlDatabase
   };
   console.log(`Template Variable: `,templateVars);
@@ -82,7 +82,7 @@ app.post("/create-urls", (req, res) => {
   urlDatabase = {...urlDatabase, [shortURL]: longURL};
 
   const templateVars = {
-    username: req.cookies["username"],
+    ...users,
     urls: urlDatabase
   };
   console.log(`Template Variable: `,templateVars);
@@ -96,14 +96,14 @@ app.post("/login", (req, res) => {
  const username = req.body.username;
  
  if(username){
-   res.cookie("username", username);
+   res.cookie("user_id", username);
    res.redirect("/urls");
  }
 })
 
 // Logout handling route
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect("/urls")
  })
 
@@ -131,33 +131,51 @@ app.post('/urls/:shortURL/update', (req, res) => {
 //for registration template
 app.get("/register", (req, res) => {
   const templateVars = {
-    username: req.cookies["username"],
+    ...users,
     email: "james@bond.com"
   };
   res.render("register.ejs", templateVars);
-})
+});
 
 // registration endpoint for handling registration data
 app.post("/register", (req, res) => {
-  let newUser ={
-    userID: generateRandomString(),
+  
+
+  if(req.body.email === "" || req.body.password === "") {
+    res.status(400).send("Email/Password cannot be empty!");
+    res.end();
+  } else if(checkUsersObject(req.body.email)) {
+    res.status(400).send("This email already exists!")
+  } else {
+    const newUserID = generateRandomString();
+    users[newUserID] = {
+    userID: newUserID,
     email: req.body.email,
     password: req.body.password
+   }
+   res.cookie("user_id", newUserID);
+   res.redirect("/urls");
   }
-
-  const templateVars = {
-    ...users, newUser
-  };
-  
-  res.cookie("user_id", newUser.userID);
-  res.redirect("/urls");
-})
+});
 
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
+
+//function to look up user object using the cookie value
+
+function checkUsersObject (email) {
+  for(let key in users) {
+    if(users[key].email === email) {
+      return users[key].id;
+    } else {
+      return null;
+    }
+  }
+  return null;
+}
 
 //function to generate 6 character long unique renadom string
 function generateRandomString() {
