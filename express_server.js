@@ -116,8 +116,21 @@ app.post('/urls/:shortURL/update', (req, res) => {
 
 //for registration template
 app.get("/register", (req, res) => {
-  res.render("/register");
+  const templateVars = {
+    username: req.cookies["username"],
+    email: "james@bond.com"
+  };
+  res.render("register.ejs", templateVars);
 })
+//for registration template
+app.post("/register", (req, res) => {
+  const templateVars = {
+    username: req.cookies["username"],
+    email: "james@bond.com"
+  };
+  res.render("register.ejs", templateVars);
+})
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
