@@ -90,16 +90,14 @@ app.post("/create-urls", (req, res) => {
 });
 
 // Login handling route
-app.post("/login", (req, res) => {
- const email = req.body.email;
- const password = req.body.password;
- const username = req.body.username;
- 
- if(username){
-   res.cookie("user_id", username);
-   res.redirect("/urls");
- }
-})
+app.get("/login", (req, res) => {
+    const templateVars = {
+      ...users,
+      email: "james@bond.com"
+    };
+    res.render("login.ejs", templateVars);
+});
+
 
 // Logout handling route
 app.post("/logout", (req, res) => {
