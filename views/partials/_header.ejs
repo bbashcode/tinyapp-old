@@ -31,12 +31,11 @@
         <div class="navbar-nav">
           <a class="nav-item nav-link" href="/urls">My URLs</a>
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-          <div class="parent-container">
             <% if(username){ %>
-              <div class="child1"> <p class="logged-in">Logged in as: <%=username%> </p></div>
-             <div class="child2"><form method="POST" action="/logout" id="login-form">
-              <button type="submit" class="btn btn-primary">Logout</button>
-           </form></div>
+             <form method="POST" action="/logout" id="login-form">
+             <span> Logged in as: <%=username%>
+              <button type="submit" class="btn btn-primary">Logout</button></span>
+           </form>
               
               <% } else { %>
                 <form method="POST" action="/login" id="login-form">
@@ -44,7 +43,6 @@
                 <button type="submit" class="btn btn-primary">Login</button>
                </form>
               <% } %>
-          </div>
         </div> 
       </div>
   </nav>
