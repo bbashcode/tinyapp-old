@@ -123,13 +123,13 @@ app.get("/register", (req, res) => {
   res.render("register.ejs", templateVars);
 })
 //for registration template
-app.post("/register", (req, res) => {
-  const templateVars = {
-    username: req.cookies["username"],
-    email: "james@bond.com"
-  };
-  res.render("register.ejs", templateVars);
-})
+// app.post("/register", (req, res) => {
+//   const templateVars = {
+//     username: req.cookies["username"],
+//     email: "james@bond.com"
+//   };
+//   res.render("register.ejs", templateVars);
+// })
 
 
 app.listen(PORT, () => {
