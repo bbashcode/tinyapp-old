@@ -89,22 +89,6 @@ app.post("/create-urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-// Login handling route
-app.get("/login", (req, res) => {
-    const templateVars = {
-      ...users,
-      email: "james@bond.com"
-    };
-    res.render("login.ejs", templateVars);
-});
-
-
-// Logout handling route
-app.post("/logout", (req, res) => {
-  res.clearCookie('user_id');
-  res.redirect("/urls")
- })
-
 // for delete button
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
@@ -156,6 +140,32 @@ app.post("/register", (req, res) => {
   }
 });
 
+// feature (login) - login handling route
+app.get("/login", (req, res) => {
+  const templateVars = {
+    ...users,
+    email: "james@bond.com"
+  };
+  res.render("login.ejs", templateVars);
+});
+
+
+// feature (login) - Update the Login Handler
+app.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (!checkUsersObject(email)) {
+    res.status(403).send("Email cannot be found!");
+    res.end();
+  } else if (!(password === users[key].password)) {
+    res.status(403).send("Sorry, password did not match!");
+    res.end();
+  } else {
+    res.cookie("user_id", users[key].id);
+    res.redirect("/urls");
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
