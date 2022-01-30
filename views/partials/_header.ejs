@@ -1,5 +1,5 @@
 <style>
-  .parent-container {
+  /* .parent-container {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -11,7 +11,15 @@
 
   .child1{
     margin: auto;
-  }
+  } */
+
+
+  #login-form {
+    top: 0.3em;
+    right: 0.3em;
+    position: absolute;
+ }
+
 </style>
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-success">
@@ -26,14 +34,14 @@
           <div class="parent-container">
             <% if(username){ %>
               <div class="child1"> <p class="logged-in">Logged in as: <%=username%> </p></div>
-             <div class="child2"><form method="POST" action="/logout">
-              <button type="submit" class="btn btn-outline-dark">Logout</button>
+             <div class="child2"><form method="POST" action="/logout" id="login-form">
+              <button type="submit" class="btn btn-primary">Logout</button>
            </form></div>
               
               <% } else { %>
-                <form method="POST" action="/login">
+                <form method="POST" action="/login" id="login-form">
                   <input type="text" placeholder="Username" name="username"></input>
-                <button type="submit" class="btn btn-outline-dark">Login</button>
+                <button type="submit" class="btn btn-primary">Login</button>
                </form>
               <% } %>
           </div>
