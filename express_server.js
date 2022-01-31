@@ -143,16 +143,19 @@ app.post("/register", (req, res) => {
 app.get("/login", (req, res) => {
   const userID = req.cookies.user_id;
   const visitor = users[userID];
+
   const templateVars = {
     visitor,
   };
-  res.render("login.ejs", templateVars);
+
+  res.render("login", templateVars);
 });
 
 // feature (login) - Update the Login Handler
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
+  const userName = req.body.userName;
   // console.log("Case 0 -------");
 
   if (!checkUsersObject(email)) {
