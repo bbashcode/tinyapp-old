@@ -1,11 +1,11 @@
 //all the imports
 const express = require("express");
-const app = express();
-const PORT = 8080; //default port
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 //setting up the packages to be used in the server file.
+const app = express();
+const PORT = 8080; //default port
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
