@@ -141,7 +141,12 @@ app.post("/register", (req, res) => {
 
 // feature (login) - login handling route
 app.get("/login", (req, res) => {
-  res.render("login.ejs");
+  const userID = req.cookies.user_id;
+  const visitor = users[userID];
+  const templateVars = {
+    visitor,
+  };
+  res.render("login.ejs", templateVars);
 });
 
 // feature (login) - Update the Login Handler
@@ -168,7 +173,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
-  res.redirect("/login");
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
